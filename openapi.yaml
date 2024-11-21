@@ -1,0 +1,3063 @@
+openapi: 3.0.0
+info:
+  title: Komm
+  description: Komm App
+  version: 0.0.1
+servers:
+  - url: https://gokomm.com/v1
+paths:
+  /oauth/token:
+    post:
+      tags:
+        - Auth
+      operationId: getAuthToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              title: TokenRequest
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                refresh_token:
+                  type: string
+                  nullable: true
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                scope:
+                  type: string
+                  default: EMAIL
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Token Request Response
+          content:
+            application/json:
+              schema:
+                title: RequestTokenResponse
+                type: object
+                properties:
+                  token_type:
+                    type: string
+                  expires_in:
+                    type: integer
+                  access_token:
+                    type: string
+                  refresh_token:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /recovery-password-request:
+    post:
+      tags:
+        - Auth
+      operationId: recoverPasswordRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: RecoverPasswordRequestRequest
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Recover password response
+          content:
+            application/json: {}
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+  /recovery-password-valid:
+    post:
+      tags:
+        - Auth
+      operationId: recoverPasswordValid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: RecoverPasswordValidRequest
+              type: object
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: Recover password valid
+          content:
+            application/json:
+              schema:
+                title: RecoverPasswordValidResponse
+                type: object
+                properties:
+                  user_id:
+                    type: string
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+  /recovery-password:
+    post:
+      tags:
+        - Auth
+      operationId: recoverPasswordChange
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: RecoverPasswordChangeRequest
+              type: object
+              properties:
+                id:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Recover password change
+          content:
+            application/json: {}
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /signup:
+    post:
+      tags:
+        - User
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              title: SignupRequest
+              type: object
+              properties:
+                id:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                datebirth:
+                  type: string
+                gender:
+                  type: string
+                height:
+                  type: number
+                complexion:
+                  type: string
+                education:
+                  type: string
+                country:
+                  type: string
+      responses:
+        '200':
+          description: Signup success
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      tags:
+        - User
+      operationId: validateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                code:
+                  type: string
+              example:
+                id: c1860854-6000-43c6-8213-ca1708bde4c4
+                code: '37344'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /signup/email-validation/{id}:
+    get:
+      tags:
+        - User
+      operationId: sendValidationEmail
+      parameters:
+        - name: id
+          description: The id of the user
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  
+  /user:
+    get:
+      tags:
+        - User
+      operationId: getUser
+      responses:
+        '200':
+          $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      tags:
+        - User
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: Successfully Updated User
+          content:
+            application/json: {}
+        400:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/hobby:
+    get:
+      tags:
+        - User
+      operationId: getUserHobbies
+      responses:
+        '200':
+          description: User Hobbies List
+          content:
+            application/json:
+              schema:
+                title: UserHobbiesResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hobby'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /user/block:
+    post:
+      tags:
+        - User
+      operationId: blockUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: BlockUserRequest
+              type: object
+              properties:
+                mainProfile:
+                  type: string
+                blockProfile:
+                  type: string
+      responses:
+        200:
+          description: Successfully Blocked User
+          content:
+            application/json: { }
+        400:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/blacklist/{profileId}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - User
+      summary: Black List By Profile
+      operationId: getBlackListByProfileId
+      parameters:
+        - name: profileId
+          description: Id of the user profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: BlackListResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfileInfo'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /user/giveaways:
+    get:
+      security:
+        - oauth2: []
+      tags:
+        - User
+      operationId: getUserGiveaways
+      responses:
+        '200':
+          description: User Giveaways List
+          content:
+            application/json:
+              schema:
+                title: UserGiveawaysResponse
+                type: object
+                properties:
+                  score:
+                    type: integer
+                  level:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /user/unblock:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: [ "oauth2" ]
+      summary: Unblock Profile
+      operationId: unblockUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: UnblockUserRequest
+              type: object
+              properties:
+                blockProfile:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /user/password:
+    patch:
+      tags:
+        - User
+      operationId: changePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: ChangePasswordRequest
+              type: object
+              properties:
+                old_password:
+                  type: string
+                new_password:
+                  type: string
+      responses:
+        200:
+          description: Successfully Changed Password
+          content:
+            application/json: { }
+        400:
+          $ref: '#/components/responses/ErrorResponse'
+  /user/notifications:
+    get:
+      tags:
+        - User
+      operationId: getNotifications
+      security:
+        - bearerAuth: [ "oauth2" ]
+      responses:
+        '200':
+          description: Notifications List
+          content:
+            application/json:
+              schema:
+                title: UserNotifications
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfileNotification'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /user/verify:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: [ "oauth2" ]
+      summary: "Requests a sms verification code"
+      operationId: verifyUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: VerifyUserRequest
+              type: object
+              properties:
+                phone:
+                  type: string
+                prefix:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /user/verify/validation:
+    post:
+      tags:
+        - User
+      security:
+        - bearerAuth: [ "oauth2" ]
+      summary: "Verify sms verification code"
+      operationId: validateVerificationCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: ValidateVerificationCodeRequest
+              type: object
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+      
+  /gender:
+    get:
+      tags:
+        - StaticData
+      operationId: getGenderList
+      parameters:
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Genres List
+          content:
+            application/json:
+              schema:
+                title: GenresResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Gender'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /gender/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getGenderById
+      parameters:
+        - name: id
+          description: The id of the genre
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Genre object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Gender'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /complexion:
+    get:
+      tags:
+        - StaticData
+      operationId: getComplexionList
+      parameters:
+        - name: locale
+          description: ISO code language of the response
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Complexion List
+          content:
+            application/json:
+              schema:
+                title: ComplexionResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Complexion'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /complexion/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getComplexionById
+      parameters:
+        - name: id
+          description: The id of the genre
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Complexion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Complexion'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /country:
+    get:
+      tags:
+        - StaticData
+      operationId: getCountryList
+      parameters:
+        - name: locale
+          description: ISO code language of the response
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Country List
+          content:
+            application/json:
+              schema:
+                title: CountryResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Country'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /country/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getCountryById
+      parameters:
+        - name: id
+          description: The id of the country
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Country
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /education:
+    get:
+      tags:
+        - StaticData
+      operationId: getEducationList
+      parameters:
+        - name: locale
+          description: ISO code language of the response
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Education List
+          content:
+            application/json:
+              schema:
+                title: EducationResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Education'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /education/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getEducationById
+      parameters:
+        - name: id
+          description: The id of the education
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Education
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Education'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /hobby:
+    get:
+      tags:
+        - StaticData
+      operationId: getHobbyList
+      parameters:
+        - name: locale
+          description: ISO code language of the response
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Hobby List
+          content:
+            application/json:
+              schema:
+                title: EducationResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hobby'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /hobby/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getHobbyById
+      parameters:
+        - name: id
+          description: The id of the hobby
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Education
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hobby'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /hobby/category:
+    get:
+      tags:
+        - StaticData
+      operationId: getHobbyCategoryList
+      parameters:
+        - name: locale
+          description: ISO code language of the response
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Hobby Category List
+          content:
+            application/json:
+              schema:
+                title: HobbyCategoryResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/HobbyCategory'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /hobby/category/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getHobbyCategoryById
+      parameters:
+        - name: id
+          description: The id of the hobby category
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Hobby Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HobbyCategory'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /language:
+    get:
+      tags:
+        - StaticData
+      operationId: getLanguageList
+      parameters:
+        - name: locale
+          description: ISO code language of the response
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Language List
+          content:
+            application/json:
+              schema:
+                title: EducationResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Language'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /language/{id}:
+    get:
+      tags:
+        - StaticData
+      operationId: getLanguageById
+      parameters:
+        - name: id
+          description: The id of the language
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Language
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Language'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /profile:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Profile List By User
+      operationId: getProfileList
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: ProfileListResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfileInfo'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      operationId: createProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: string
+                nick:
+                  type: string
+                description:
+                  type: string
+                phrase:
+                  type: string
+                language:
+                  type: array
+                  items:
+                    type: string
+                status:
+                  type: integer
+                public:
+                  type: integer
+                hobbies:
+                  type: array
+                  items:
+                    type: string
+                other_hobbies:
+                  type: array
+                  items:
+                    type: string
+                preferences:
+                  $ref: '#/components/schemas/ProfilePreferences'
+                datebirth:
+                  type: integer
+                gender:
+                  type: integer
+                height:
+                  type: integer
+                education:
+                  type: integer
+                complexion:
+                  type: integer
+                country:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/upload:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Upload Profile Images
+      operationId: uploadProfileImages
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              title: UploadProfileImageRequest
+              type: object
+              properties:
+                picture[]:
+                  type: string
+                  format: binary
+                profile_id:
+                  type: string
+                  example: 1e61d321-c7d7-4c6d-a1bc-01119e1a9291
+                main:
+                  type: integer
+                  example: '1'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Profile By Id
+      operationId: getProfileById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Update Profile By Id
+      operationId: updateProfileById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nick:
+                  title: nick
+                  type: string
+                description:
+                  title: description
+                  type: string
+                phrase:
+                  title: phrase
+                  type: string
+                language:
+                  title: language
+                  type: array
+                  items:
+                    type: string
+                datebirth:
+                  title: datebirth
+                  type: integer
+                gender:
+                  title: gender
+                  type: integer
+                height:
+                  title: height
+                  type: integer
+                education:
+                  title: education
+                  type: integer
+                complexion:
+                  title: complexion
+                  type: integer
+                country:
+                  title: country
+                  type: integer
+      responses:
+        '200':
+          description: Profile Successfully Updated
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/hobbies:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Profile Hobbies By Id
+      operationId: getHobbiesByProfileId
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: EducationResponse
+                type: array
+                items:
+                  type: string
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Update Profile Hobbies By Id
+      operationId: updateProfileHobbiesById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          description: Successful Hobbies Update
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/pictures:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Profile Pictures By Id
+      operationId: getPicturesByProfileId
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: EducationResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProfilePicture'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/preferences:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Profile Preferences By Id
+      operationId: getProfilePreferencesById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Preferences
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfilePreferences"
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Update Profile Preferences By Id
+      operationId: updateProfilePreferencesById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfilePreferences'
+      responses:
+        '200':
+          description: Successful Preferences
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/permissions:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Profile Permissions By Id
+      operationId: getProfilePermissionsById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Preferences
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfilePermissions"
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/status:
+    patch:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Update Profile Status By Id
+      operationId: updateProfileStatusById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: integer
+      responses:
+        '200':
+          description: Successful Status Updated
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/privacy:
+    patch:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Update Profile Privacy By Id
+      operationId: updateProfilePrivacyById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                privacy:
+                  type: integer
+      responses:
+        '200':
+          description: Successful Privacy Updated
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/main/picture:
+    patch:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Update Profile Main Picture By Id
+      operationId: updateProfileMainPictureById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                picture_id:
+                  type: string
+      responses:
+        '200':
+          description: Successful Changed Main Image
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/picture/{pictureId}:
+    delete:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Delete Profile Picture By Id
+      operationId: deleteProfilePictureById
+      parameters:
+        - name: pictureId
+          description: The id of the profile picture
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful Deleted Profile Image
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/block/grid:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      operationId: blockProfileGrid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                profile_main:
+                  type: string
+                profile_block:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/contact:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      operationId: contactKomm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                profileId:
+                  type: string
+                type:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{id}/social:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Profile
+      summary: Profile Social Info By Id
+      operationId: getSocialInfoByProfileId
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileSocialInfo'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Profile
+      summary: Update Profile Social Info By Id
+      operationId: updateProfileSocialInfoById
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                profileId:
+                  type: string
+                facebook:
+                  type: string
+                x:
+                  type: string
+                instagram:
+                  type: string
+                tiktok:
+                  type: string
+                website:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        '200':
+          description: Successful Social Info Update
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /profile/{profileId}/read-notification:
+    patch:
+      tags:
+        - Profile
+      operationId: readNotification
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: ReadNotificationRequest
+              type: object
+              properties:
+                type:
+                  type: string
+      responses:
+        200:
+          description: Successfully Reset Notification Type 
+          content:
+            application/json: { }
+        400:
+          $ref: '#/components/responses/ErrorResponse'
+
+  /relationships/{profileId}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Relations
+      summary: Profile List By User
+      operationId: getRelationships
+      parameters:
+        - name: profileId
+          description: Id of the user profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: RelationsListResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/Relation'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /relationships/{relationId}:
+    delete:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Relations
+      summary: Delete Relation by RelationId
+      operationId: deleteRelation
+      parameters:
+        - name: relationId
+          description: Id of the relation
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful deleted Relation
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /relationships/request:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Relations
+      summary: Request relationship
+      operationId: relationshipRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: RequestRelationBody
+              type: object
+              properties:
+                id:
+                  type: string
+                from_profile:
+                  type: string
+                to_profile:
+                  type: string
+      responses:
+        '200':
+          description: Successful Relation Requested
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /relationships/response:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Relations
+      summary: Response relationship
+      operationId: relationshipResponse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: ResponseRelationBody
+              type: object
+              properties:
+                id:
+                  type: string
+                response:
+                  type: integer
+                  description: 0 for reject, 1 for accept
+      responses:
+        '200':
+          description: Successful Relation Requested
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /grid/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Grids
+      operationId: getGridsByProfileId
+      parameters:
+        - name: id
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                title: GridsByProfileResponse
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    phrase:
+                      type: string
+                    picture:
+                      type: string
+                    hobbies:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Hobby'
+                    type:
+                      type: string
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /chat/{profileId}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Chat
+      operationId: getChatByProfile
+      parameters:
+        - name: profileId
+          description: The id of the profile
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chats of profile
+          content:
+            application/json:
+              schema:
+                title: ChatsByProfileResponse
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    status:
+                      type: integer
+                    profile:
+                      $ref: '#/components/schemas/ProfileInfo'
+                    message:
+                      type: string
+                    date:
+                      type: string
+                    total:
+                      type: integer
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /chat/status:
+    get:
+      tags:
+        - Chat
+      operationId: getAccountLastMessageChats
+      parameters:
+        - name: profileId
+          description: Profile id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chat Messages
+          content:
+            application/json:
+              schema:
+                title: ChatMessages
+                type: array
+                items:
+                  properties:
+                    profile:
+                      type: string
+                    chat:
+                      type: boolean
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /chat/{chatId}/messages:
+    get:
+      tags:
+        - Chat
+      operationId: getChatMessages
+      parameters:
+        - name: chatId
+          description: Chat id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Chat Messages
+          content:
+            application/json:
+              schema:
+                title: ChatMessages
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /event:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: createEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: string
+                profile:
+                  type: string
+                hobby:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                description_extended:
+                  type: string
+                date:
+                  type: string
+                hour_init:
+                  type: string
+                duration:
+                  type: number
+                price:
+                  type: number
+                paxes:
+                  type: integer
+                location:
+                  type: string
+                send_to_blocked:
+                  type: integer
+                request_valuation:
+                  type: integer
+                filter_to_preferences:
+                  type: integer
+                validate_request:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/{eventId}:
+    patch:
+      security:
+        - bearerAuth: [ ]
+      operationId: UpdateEventById
+      tags:
+        - Event
+      summary: Update Event
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                profile:
+                  type: string
+                title:
+                  type: string
+                description:
+                  type: string
+                description_short:
+                  type: string
+                description_extended:
+                  type: string
+                date:
+                  type: string
+                hour_init:
+                  type: string
+                duration:
+                  type: number
+                price:
+                  type: number
+                paxes:
+                  type: integer
+                location:
+                  type: string
+                send_to_blocked:
+                  type: integer
+                request_valuation:
+                  type: integer
+                filter_to_preferences:
+                  type: integer
+      parameters:
+        - name: eventId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/{eventId}/participants/{profileId}:
+    get:
+      tags:
+        - Event
+      security:
+        - bearerAuth: []
+      summary: Get event participants
+      operationId: getEventParticipantsByEventId
+      parameters:
+        - name: eventId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful event participants
+          content:
+            application/json:
+              schema:
+                title: EventParticipantsResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventParticipant'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/{eventId}/{profileId}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: GetEventById
+      summary: Event By Id
+      parameters:
+        - name: eventId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Exit event
+      operationId: exitEventByEventAndProfileId
+      parameters:
+        - name: eventId
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful event participants
+          content:
+            application/json: {}
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/participant/request:
+    post:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Request to participate in an Event
+      operationId: requestParticipantEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: EventParticipationRequest
+              properties:
+                id:
+                  type: string
+                profile:
+                  type: string
+      responses:
+        '200':
+          description: Successfully send request
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/participant/response:
+    patch:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Update participation status in an Event
+      operationId: updateParticipantEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: UpdateParticipantRequest
+              properties:
+                id:
+                  type: string
+                profile:
+                  type: string
+                response:
+                  type: integer
+      responses:
+        '200':
+          description: Successfully send request
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/participant/score:
+    post:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Rate an participant
+      operationId: rateParticipantEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: RateParticipantRequest
+              properties:
+                id:
+                  type: string
+                profile:
+                  type: string
+                score:
+                  type: integer
+                comment:
+                  type: string
+      responses:
+        '200':
+          description: Successfully send request
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/participant/qr:
+    post:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Generate a QR for validation
+      operationId: generateParticipantEventQR
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: GenerateParticipantEventQRRequest
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Successfully send request
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/participant/qr/validate:
+    post:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Validate participant QR
+      operationId: validateParticipantEventQR
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: ValidateParticipantEventQRRequest
+              properties:
+                code:
+                  type: string
+                profile:
+                  type: string
+                event:
+                  type: string
+      responses:
+        '200':
+          description: Successfully send request
+          content:
+            application/json:
+              schema:
+                title: ValidateParticipantEventQRResponse
+                properties:
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/profile/{profileId}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: getProfileEventsById
+      summary: Get Profile Events By Id
+      parameters:
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: ProfileListEventsResponse
+                type: object
+                items:
+                  $ref: '#/components/schemas/ProfileEvent'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/profile/{profileId}/other:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: getProfileOtherEventsByProfileId
+      summary: Get Profile Other Events By Id
+      parameters:
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: ProfileListEventsResponse
+                type: object
+                items:
+                  $ref: '#/components/schemas/ProfileEvent'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/profile/{profileId}/search:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: searchProfileEventsByProfileId
+      summary: Search for profile events by id
+      parameters:
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: ProfileListEventsResponse
+                type: object
+                items:
+                  $ref: '#/components/schemas/ProfileEvent'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/profile/{profileId}/last:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: getLastProfileEventsByProfileId
+      summary: Get past profile events by profile id
+      parameters:
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: ProfileListEventsResponse
+                type: object
+                items:
+                  $ref: '#/components/schemas/ProfileEvent'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/upload:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Event
+      operationId: UploadPictureEvent
+      summary: Upload Picture Event
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                profile:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/cancel:
+    patch:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Cancel an event
+      operationId: cancelEventByEventId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: CancelEventRequest
+              type: object
+              properties:
+                id:
+                  description: Event Id
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /event/check-in:
+    post:
+      tags:
+        - Event
+      security:
+        - bearerAuth: [ ]
+      summary: Start organizer checkin
+      operationId: eventCheckIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: EventCheckIn
+              type: object
+              properties:
+                id:
+                  description: Event Id
+                  type: string
+                location:
+                  description: Organizer coordinates
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /poi/profile/{profileId}:
+    get:
+      security:
+        - oauth2: []
+      tags:
+        - Poi
+      operationId: getCurrentProfilePois
+      parameters:
+        - name: profileId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Poi'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /poi/{poiId}:
+    get:
+      security:
+        - oauth2: [ ]
+      tags:
+        - Poi
+      operationId: getPoiById
+      parameters:
+        - name: poiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Poi'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      security:
+        - oauth2: [ ]
+      tags:
+        - Poi
+      operationId: deletePoiById
+      parameters:
+        - name: poiId
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful delete
+          content:
+            application/json: { }
+  /poi:
+    post:
+      security:
+        - oauth2: [ ]
+      tags:
+        - Poi
+      operationId: createPoi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                profile:
+                  type: string
+                alias:
+                  type: string
+                coordinates:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      security:
+        - oauth2: [ ]
+      tags:
+        - Poi
+      operationId: updatePoi
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                profile:
+                  type: string
+                alias:
+                  type: string
+                coordinates:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /validation/email-user:
+    post:
+      tags:
+        - Validation
+      operationId: validateEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: Validation Result
+          content:
+            application/json:
+              schema:
+                title: ValidationResponse
+                type: object
+                properties:
+                  validate:
+                    title: validate
+                    type: boolean
+
+  /feedback:
+    post:
+      security:
+        - oauth2: [ ]
+      tags:
+        - Feedback
+      operationId: postFeedback
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              title: UploadFeedbackRequest
+              type: object
+              properties:
+                id:
+                  type: string
+                section:
+                  type: string
+                platform:
+                  type: string
+                version:
+                  type: string
+                osVersion:
+                  type: string
+                message:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /complaint:
+    post:
+      security:
+        - oauth2: [ ]
+      tags:
+        - Complaint
+      operationId: postComplaint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Complaint'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: { }
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+  /complaint_type:
+    get:
+      security:
+        - oauth2: [ ]
+      tags:
+        - StaticData
+      operationId: getComplaintTypeList
+      parameters:
+        - name: locale
+          description: ISO code language of the response.
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                title: ComplaintTypeListResponse
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComplaintType'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /giveaway:
+    get:
+      security:
+        - oauth2: [  ]
+      tags:
+        - Giveaway
+      operationId: getGiveaways
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Giveaway'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+  schemas:
+    Gender:
+      type: object
+      description: Gender
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        name:
+          title: name
+          type: string
+          nullable: false
+        active:
+          title: active
+          type: boolean
+    Complexion:
+      type: object
+      description: Complexion
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        name:
+          title: name
+          type: string
+          nullable: false
+        description:
+          title: description
+          type: string
+          nullable: true
+        active:
+          title: active
+          type: boolean
+    Complaint:
+      type: object
+      description: Complaint
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        profile:
+          type: string
+        details:
+          type: string
+    ComplaintType:
+      type: object
+      description: ComplaintType
+      properties:
+        id:
+          type: string
+        section:
+          type: string
+        name:
+          type: string
+    Country:
+      type: object
+      description: Country
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        currency:
+          title: currency
+          type: string
+          description: Identifier of the currency
+          nullable: false
+        iso_code:
+          title: iso_code
+          type: string
+          description: ISO language code
+          nullable: false
+        call_prefix:
+          title: call_prefix
+          type: integer
+          nullable: false
+    Education:
+      type: object
+      description: Education
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        name:
+          title: name
+          type: string
+          nullable: false
+        description:
+          title: description
+          type: string
+          nullable: true
+        active:
+          title: active
+          type: boolean
+    Event:
+      type: object
+      description: Event
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        description_short:
+          type: string
+        description_extended:
+          type: string
+        price:
+          type: number
+        paxes:
+          type: integer
+        status:
+          type: integer
+        participant_status:
+          type: integer
+        date_init:
+          type: string
+        date_end:
+          type: string
+        duration:
+          type: number
+        location:
+          $ref: '#/components/schemas/Poi'
+        send_to_blocked:
+          title: send_to_blocked
+          type: integer
+        filter_to_preferences:
+          type: integer
+        request_valuation:
+          type: integer
+        validate_request:
+          type: integer
+        picture:
+          title: picture
+          type: string
+        profile:
+          $ref: '#/components/schemas/EventParticipant'
+        hobby:
+          $ref: '#/components/schemas/Hobby'
+        chatId:
+          type: string
+        orgBlocked:
+          type: boolean
+        orgProfileType:
+          type: string
+        totalConfirm:
+          type: integer
+        totalPending:
+          type: integer
+        vip:
+          type: boolean
+        validation_active:
+          type: boolean
+        link_share:
+          type: string
+        org_checkin:
+          type: boolean
+    EventCreator:
+      type: object
+      description: EventCreator
+      properties:
+        id:
+          type: string
+        nick:
+          type: string
+        phrase:
+          type: string
+        picture:
+          type: string
+        score:
+          type: integer
+        statusRelation:
+          type: integer
+        valoration:
+          type: boolean
+        totalValorations:
+          type: integer
+        totalEventsCreated:
+          type: integer
+        totalEventsJoined:
+          type: integer
+        percentAssistanceEvent:
+          type: number
+          format: double
+    EventParticipant:
+      type: object
+      description: EventParticipant
+      properties:
+        id:
+          type: string
+        nick:
+          type: string
+        phrase:
+          type: string
+        picture:
+          type: string
+        status:
+          type: integer
+        blocked:
+          type: boolean
+        relation:
+          type: boolean
+        statusRelation:
+          type: number
+        chatId:
+          type: string
+        valoration:
+          type: boolean
+        score:
+          type: integer
+        comment:
+          type: string
+        date:
+          type: string
+    Hobby:
+      type: object
+      description: Hobby
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        category:
+          title: category
+          type: string
+          description: Hobby Category Identifier
+          nullable: false
+        name:
+          title: name
+          type: string
+          nullable: false
+        description:
+          title: description
+          type: string
+          nullable: true
+        icon:
+          title: icon
+          type: string
+          description: Category Icon
+          nullable: true
+        active:
+          title: active
+          type: boolean
+    HobbyCategory:
+      type: object
+      description: HobbyCategory
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        name:
+          title: name
+          type: string
+          nullable: false
+        description:
+          title: description
+          type: string
+          nullable: true
+        picture:
+          type: string
+        active:
+          title: active
+          type: boolean
+    Language:
+      type: object
+      description: Language
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        name:
+          title: name
+          type: string
+          nullable: false
+        description:
+          title: description
+          type: string
+          nullable: true
+        active:
+          title: active
+          type: boolean
+    Profile:
+      type: object
+      description: Profile
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+        nick:
+          title: nick
+          type: string
+        phrase:
+          title: phrase
+          type: string
+        description:
+          title: description
+          type: string
+          nullable: true
+        picture:
+          title: picture
+          type: string
+        public:
+          title: public
+          type: boolean
+          default: true
+        score:
+          title: score
+          type: integer
+        type:
+          type: string
+        hobbyCategory:
+          type: string
+        totalValorations:
+          type: integer
+        totalEventsCreated:
+          type: integer
+        totalEventsJoined:
+          type: integer
+        percentAssistanceEvent:
+          type: integer
+    ProfileInfo:
+      type: object
+      description: Profile
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+        nick:
+          title: nick
+          type: string
+        phrase:
+          title: phrase
+          type: string
+        picture:
+          title: picture
+          type: string
+        status:
+          title: status
+          type: integer
+          default: true
+        public:
+          title: public
+          type: boolean
+          default: true
+        type:
+          type: string
+        hobbies:
+          title: hobbies
+          type: array
+          items:
+            $ref: '#/components/schemas/Hobby'
+        hobbyCategory:
+          type: string
+    ProfileEvent:
+      type: object
+      description: Event with profile participation
+      properties:
+        id:
+          title: id
+          type: string
+        title:
+          title: title
+          type: string
+        picture:
+          title: picture
+          type: string
+        description_short:
+          type: string
+        date_init:
+          type: string
+        paxes:
+          type: integer
+        price:
+          type: number
+        status:
+          type: integer
+        participant_status:
+          type: integer
+        validate_request:
+          type: integer
+        hobby:
+          $ref: '#/components/schemas/Hobby'
+        profile:
+          $ref: '#/components/schemas/EventCreator'
+        chatId:
+          type: string
+        orgBlocked:
+          type: boolean
+        orgProfileType:
+          type: string
+        totalConfirm:
+          type: number
+        totalPending:
+          type: number
+        vip:
+          type: boolean
+    ProfilePicture:
+      type: object
+      description: Profile Picture
+      properties:
+        id:
+          title: id
+          type: string
+          description: Identifier of the object
+          nullable: false
+        url:
+          title: url
+          type: string
+          description: Url of the picture
+          nullable: false
+        main:
+          title: main
+          type: boolean
+          description: True if is the main profile photo
+          default: false
+    ProfileNotification:
+      type: object
+      description: Profile Notification
+      properties:
+        profileId:
+          type: string
+        notifications:
+          type: object
+          properties:
+            chat:
+              type: number
+            relation:
+              type: number
+            event:
+              type: number
+    Relation:
+      type: object
+      description: Relation
+      properties:
+        id:
+          type: string
+        profile:
+          type: string
+        initProfile:
+          type: string
+        name:
+          type: string
+        phrase:
+          type: string
+        picture:
+          type: string
+        requested:
+          type: boolean
+        createdAt:
+          type: string
+    ProfilePreferences:
+      type: object
+      description: Profile
+      properties:
+        height_min:
+          title: height_min
+          type: number
+          format: double
+          description: Minimun height
+          nullable: true
+        height_max:
+          title: height_max
+          type: number
+          format: double
+          description: Maximum height
+          nullable: true
+        age_min:
+          title: age_min
+          type: integer
+          description: Minimun age
+          nullable: true
+        age_max:
+          title: age_max
+          type: integer
+          description: Maximum age
+          nullable: true
+        distance:
+          title: distance
+          type: integer
+          description: Maximun distance for contacts
+          nullable: false
+        location:
+          type: string
+          nullable: true
+        poi:
+          type: string
+        complexions:
+          title: complexions
+          type: array
+          items:
+            type: string
+          nullable: true
+        educations:
+          title: educations
+          type: array
+          items:
+            type: string
+          nullable: true
+        genders:
+          title: genders
+          type: array
+          items:
+            type: string
+          nullable: true
+        nationality:
+          title: nationality
+          type: array
+          items:
+            type: string
+          nullable: true
+    ProfilePermissions:
+      type: object
+      description: Profile Permissions
+      properties:
+        total_events: 
+          type: num
+        total_events_active_per_week:
+          type: num
+        total_events_participants:
+          type: num
+        events_money_limit:
+          type: num
+        events_advance_hour:
+          type: num
+        limit_friend_request:
+          type: num
+        events_active:
+          type: boolean
+    ProfileSocialInfo:
+      type: object
+      description: Profile Social Info
+      properties:
+        facebook:
+          type: string
+        x:
+          type: string
+        instagram:
+          type: string
+        tiktok:
+          type: string
+        website:
+          type: string
+        phone:
+          type: string
+    User:
+      type: object
+      description: User
+      properties:
+        id:
+          title: id
+          type: string
+        email:
+          title: email
+          type: string
+        height:
+          title: height
+          type: number
+          format: double
+        gender:
+          title: gender
+          type: string
+        education:
+          title: education
+          type: string
+        complexion:
+          title: complexion
+          type: string
+        country:
+          title: country
+          type: string
+        active:
+          title: active
+          type: integer
+        verified:
+          type: bool
+    ChatMessage:
+      type: object
+      description: Chat Message
+      properties:
+        id:
+          type: string
+        profile:
+          $ref: '#/components/schemas/ProfileInfo'
+        chatId:
+          type: string
+        message:
+          type: string
+        date:
+          type: string
+    Poi:
+      type: object
+      description: Point of Interest
+      properties:
+        id:
+          type: string
+        alias:
+          type: string
+        coordinates:
+          type: string
+    Gift:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        picture:
+          type: string
+    Giveaway:
+      type: object
+      description: Giveaway
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        end_date:
+          type: string
+        gifts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Gift'
+  responses:
+    ErrorResponse:
+      description: Api Error
+      content:
+        application/json:
+          schema:
+            title: ErrorResponse
+            type: object
+            properties:
+              message:
+                title: message
+                type: string
+                description: Description of error
+                nullable: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
