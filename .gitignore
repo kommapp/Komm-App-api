@@ -34,3 +34,6 @@ pubspec.lock
 
 ._*
 .DS_Store
+
+# FVM Version Cache
+.fvm/

@@ -12,18 +12,15 @@ class Education {
 
   String? description;
 
-  bool? active;
-
   Education({
     this.id,
     this.name,
     this.description,
-    this.active,
   });
 
   @override
   String toString() {
-    return 'Education[id=$id, name=$name, description=$description, active=$active, ]';
+    return 'Education[id=$id, name=$name, description=$description, ]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -33,9 +30,9 @@ class Education {
 
     name = (json[r'name'] == null) ? null : (json[r'name'] as String?);
 
-    description = (json[r'description'] == null) ? null : (json[r'description'] as String?);
-
-    active = (json[r'active'] == null) ? null : (json[r'active'] == 1);
+    description = (json[r'description'] == null)
+        ? null
+        : (json[r'description'] as String?);
   }
 
   Education.fromJson(Map<String, dynamic>? json) {
@@ -53,32 +50,34 @@ class Education {
     if (description != null) {
       json[r'description'] = description;
     }
-    if (active != null) {
-      json[r'active'] = active;
-    }
     return json;
   }
 
   static List<Education> listFromJson(List<dynamic>? json) {
-    return json == null ? <Education>[] : json.map((value) => Education.fromJson(value)).toList();
+    return json == null
+        ? <Education>[]
+        : json.map((value) => Education.fromJson(value)).toList();
   }
 
   static Map<String, Education> mapFromJson(Map<String, dynamic>? json) {
     final map = <String, Education>{};
     if (json != null && json.isNotEmpty) {
-      json.forEach((String key, dynamic value) => map[key] = Education.fromJson(value));
+      json.forEach(
+          (String key, dynamic value) => map[key] = Education.fromJson(value));
     }
     return map;
   }
 
   @override
-  bool operator ==(Object? __other) {
+  bool operator ==(Object __other) {
     if (identical(this, __other)) {
       return true;
     }
 
     if (__other is Education && runtimeType == __other.runtimeType) {
-      return id == __other.id && name == __other.name && description == __other.description && active == __other.active;
+      return id == __other.id &&
+          name == __other.name &&
+          description == __other.description;
     }
 
     return false;
@@ -100,10 +99,6 @@ class Education {
       hashCode = hashCode * 31 + description.hashCode;
     }
 
-    if (active != null) {
-      hashCode = hashCode * 31 + active.hashCode;
-    }
-
     return hashCode;
   }
 
@@ -111,23 +106,19 @@ class Education {
     String? id,
     String? name,
     String? description,
-    bool? active,
   }) {
     id ??= this.id;
     name ??= this.name;
     description ??= this.description;
-    active ??= this.active;
 
     final _copy_id = id;
     final _copy_name = name;
     final _copy_description = description;
-    final _copy_active = active;
 
     return Education(
       id: _copy_id,
       name: _copy_name,
       description: _copy_description,
-      active: _copy_active,
     );
   }
 }

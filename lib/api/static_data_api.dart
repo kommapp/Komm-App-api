@@ -31,7 +31,7 @@ class StaticDataApi {
     return await apiDelegate.getComplexionById_decode(__body);
   }
 
-  Future<List<Complexion>> getComplexionList({Options? options, String? locale}) async {
+  Future<List<Complexion>> getComplexionList(String locale, {Options? options}) async {
     final response = await apiDelegate.getComplexionList(options: options, locale: locale);
 
     if (![200, 400].contains(response.statusCode)) {
@@ -73,8 +73,8 @@ class StaticDataApi {
     return await apiDelegate.getCountryById_decode(__body);
   }
 
-  Future<List<Country>> getCountryList({Options? options, String? locale}) async {
-    final response = await apiDelegate.getCountryList(options: options, locale: locale);
+  Future<List<Country>> getCountryList(String locale, {Options? options}) async {
+    final response = await apiDelegate.getCountryList(locale: locale, options: options);
 
     if (![200, 400].contains(response.statusCode)) {
       throw ApiException(500, 'Invalid response code ${response.statusCode} returned from API');
@@ -115,7 +115,7 @@ class StaticDataApi {
     return await apiDelegate.getEducationById_decode(__body);
   }
 
-  Future<List<Education>> getEducationList({Options? options, String? locale}) async {
+  Future<List<Education>> getEducationList(String locale, {Options? options}) async {
     final response = await apiDelegate.getEducationList(options: options, locale: locale);
 
     if (![200, 400].contains(response.statusCode)) {
@@ -157,7 +157,7 @@ class StaticDataApi {
     return await apiDelegate.getGenderById_decode(__body);
   }
 
-  Future<List<Gender>> getGenderList({Options? options, String? locale}) async {
+  Future<List<Gender>> getGenderList(String locale, {Options? options}) async {
     final response = await apiDelegate.getGenderList(options: options, locale: locale);
 
     if (![200, 400].contains(response.statusCode)) {
@@ -222,7 +222,7 @@ class StaticDataApi {
     return await apiDelegate.getHobbyCategoryById_decode(__body);
   }
 
-  Future<List<HobbyCategory>> getHobbyCategoryList({Options? options, String? locale}) async {
+  Future<List<HobbyCategory>> getHobbyCategoryList(String locale, {Options? options}) async {
     final response = await apiDelegate.getHobbyCategoryList(options: options, locale: locale);
 
     if (![200, 400].contains(response.statusCode)) {
@@ -241,7 +241,7 @@ class StaticDataApi {
     return await apiDelegate.getHobbyCategoryList_decode(__body);
   }
 
-  Future<List<Hobby>> getHobbyList({Options? options, String? locale}) async {
+  Future<List<Hobby>> getHobbyList(String locale, {Options? options}) async {
     final response = await apiDelegate.getHobbyList(options: options, locale: locale);
 
     if (![200, 400].contains(response.statusCode)) {
@@ -283,7 +283,7 @@ class StaticDataApi {
     return await apiDelegate.getLanguageById_decode(__body);
   }
 
-  Future<List<Language>> getLanguageList({Options? options, String? locale}) async {
+  Future<List<Language>> getLanguageList(String locale, {Options? options}) async {
     final response = await apiDelegate.getLanguageList(options: options, locale: locale);
 
     if (![200, 400].contains(response.statusCode)) {
@@ -332,7 +332,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getComplexionById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/complexion/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/complexions/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -365,9 +365,9 @@ class StaticDataApiDelegate {
     return LocalApiClient.deserializeFromString(await utf8.decodeStream(body), 'Complexion') as Complexion;
   }
 
-  Future<ApiResponse> getComplexionList({Options? options, String? locale}) async {
+  Future<ApiResponse> getComplexionList({Options? options, required String locale}) async {
     // create path and map variables
-    final __path = '/complexion';
+    final __path = '/complexions';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -377,10 +377,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -406,7 +404,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getCountryById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/country/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/countries/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -439,9 +437,9 @@ class StaticDataApiDelegate {
     return LocalApiClient.deserializeFromString(await utf8.decodeStream(body), 'Country') as Country;
   }
 
-  Future<ApiResponse> getCountryList({Options? options, String? locale}) async {
+  Future<ApiResponse> getCountryList({Options? options, required String locale }) async {
     // create path and map variables
-    final __path = '/country';
+    final __path = '/countries';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -451,10 +449,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -480,7 +476,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getEducationById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/education/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/educations/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -513,9 +509,9 @@ class StaticDataApiDelegate {
     return LocalApiClient.deserializeFromString(await utf8.decodeStream(body), 'Education') as Education;
   }
 
-  Future<ApiResponse> getEducationList({Options? options, String? locale}) async {
+  Future<ApiResponse> getEducationList({Options? options, required String locale}) async {
     // create path and map variables
-    final __path = '/education';
+    final __path = '/educations';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -525,10 +521,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -554,7 +548,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getGenderById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/gender/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/genders/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -587,9 +581,9 @@ class StaticDataApiDelegate {
     return LocalApiClient.deserializeFromString(await utf8.decodeStream(body), 'Gender') as Gender;
   }
 
-  Future<ApiResponse> getGenderList({Options? options, String? locale}) async {
+  Future<ApiResponse> getGenderList({Options? options, required String locale}) async {
     // create path and map variables
-    final __path = '/gender';
+    final __path = '/genders';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -599,10 +593,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -628,7 +620,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getHobbyById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/hobby/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/hobbies/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -663,7 +655,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getHobbyCategoryById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/hobby/category/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/hobbies/categories/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -696,9 +688,9 @@ class StaticDataApiDelegate {
     return LocalApiClient.deserializeFromString(await utf8.decodeStream(body), 'HobbyCategory') as HobbyCategory;
   }
 
-  Future<ApiResponse> getHobbyCategoryList({Options? options, String? locale}) async {
+  Future<ApiResponse> getHobbyCategoryList({Options? options, required String locale}) async {
     // create path and map variables
-    final __path = '/hobby/category';
+    final __path = '/hobbies/categories';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -708,10 +700,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -735,9 +725,9 @@ class StaticDataApiDelegate {
         .toList();
   }
 
-  Future<ApiResponse> getHobbyList({Options? options, String? locale}) async {
+  Future<ApiResponse> getHobbyList({Options? options, required String locale}) async {
     // create path and map variables
-    final __path = '/hobby';
+    final __path = '/hobbies';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -747,10 +737,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -776,7 +764,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getLanguageById(String id, String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/language/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
+    final __path = '/languages/{id}'.replaceAll('{' + 'id' + '}', LocalApiClient.parameterToString(id)!);
 
     // query params
     final queryParams = <QueryParam>[];
@@ -809,9 +797,9 @@ class StaticDataApiDelegate {
     return LocalApiClient.deserializeFromString(await utf8.decodeStream(body), 'Language') as Language;
   }
 
-  Future<ApiResponse> getLanguageList({Options? options, String? locale}) async {
+  Future<ApiResponse> getLanguageList({Options? options, required String locale}) async {
     // create path and map variables
-    final __path = '/language';
+    final __path = '/languages';
 
     // query params
     final queryParams = <QueryParam>[];
@@ -821,10 +809,8 @@ class StaticDataApiDelegate {
       headerParams['Accept'] = 'application/json';
     }
 
-    if (locale != null) {
-      queryParams.addAll(
-          convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
-    }
+    queryParams.addAll(
+        convertParametersForCollectionFormat((p) => LocalApiClient.parameterToString(p)!, '', 'locale', locale));
 
     final authNames = <String>[];
     final opt = options ?? Options();
@@ -850,7 +836,7 @@ class StaticDataApiDelegate {
 
   Future<ApiResponse> getComplaintTypeList(String locale, {Options? options}) async {
     // create path and map variables
-    final __path = '/complaint_type';
+    final __path = '/complaints/types';
 
     // query params
     final queryParams = <QueryParam>[];

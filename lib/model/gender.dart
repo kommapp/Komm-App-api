@@ -10,19 +10,16 @@ class Gender {
 
   String? name;
 
-  bool? active;
-
   Gender({
     this.id,
     this.name,
-    this.active,
   });
 
   factory Gender.binary() => Gender(id: "ec0d7620-52e4-4f97-a1f8-5304479422c4", name: "No binario");
 
   @override
   String toString() {
-    return 'Gender[id=$id, name=$name, active=$active, ]';
+    return 'Gender[id=$id, name=$name, ]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -31,8 +28,6 @@ class Gender {
     id = (json[r'id'] == null) ? null : (json[r'id'] as String?);
 
     name = (json[r'name'] == null) ? null : (json[r'name'] as String?);
-
-    active = (json[r'active'] == null) ? null : (json[r'active'] == 1);
   }
 
   Gender.fromJson(Map<String, dynamic>? json) {
@@ -46,9 +41,6 @@ class Gender {
     }
     if (name != null) {
       json[r'name'] = name;
-    }
-    if (active != null) {
-      json[r'active'] = active;
     }
     return json;
   }
@@ -66,13 +58,13 @@ class Gender {
   }
 
   @override
-  bool operator ==(Object? __other) {
+  bool operator ==(Object __other) {
     if (identical(this, __other)) {
       return true;
     }
 
     if (__other is Gender && runtimeType == __other.runtimeType) {
-      return id == __other.id && name == __other.name && active == __other.active;
+      return id == __other.id && name == __other.name;
     }
 
     return false;
@@ -90,30 +82,22 @@ class Gender {
       hashCode = hashCode * 31 + name.hashCode;
     }
 
-    if (active != null) {
-      hashCode = hashCode * 31 + active.hashCode;
-    }
-
     return hashCode;
   }
 
   Gender copyWith({
     String? id,
     String? name,
-    bool? active,
   }) {
     id ??= this.id;
     name ??= this.name;
-    active ??= this.active;
 
     final _copy_id = id;
     final _copy_name = name;
-    final _copy_active = active;
 
     return Gender(
       id: _copy_id,
       name: _copy_name,
-      active: _copy_active,
     );
   }
 }

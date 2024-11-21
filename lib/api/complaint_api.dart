@@ -27,7 +27,7 @@ class ComplaintApiDelegate {
     Object? postBody = complaint;
 
     // create path and map variables
-    final __path = '/complaint';
+    final __path = '/complaints';
 
     // query params
     final queryParams = <QueryParam>[];

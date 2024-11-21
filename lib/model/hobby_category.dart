@@ -12,21 +12,18 @@ class HobbyCategory {
 
   String? description;
 
-  String? picture;
-
-  bool? active;
+  String? icon;
 
   HobbyCategory({
     this.id,
     this.name,
     this.description,
-    this.picture,
-    this.active,
+    this.icon,
   });
 
   @override
   String toString() {
-    return 'HobbyCategory[id=$id, name=$name, description=$description, picture=$picture, active=$active, ]';
+    return 'HobbyCategory[id=$id, name=$name, description=$description, icon=$icon,  ]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -36,11 +33,11 @@ class HobbyCategory {
 
     name = (json[r'name'] == null) ? null : (json[r'name'] as String?);
 
-    description = (json[r'description'] == null) ? null : (json[r'description'] as String?);
+    description = (json[r'description'] == null)
+        ? null
+        : (json[r'description'] as String?);
 
-    picture = (json[r'picture'] == null) ? null : (json[r'picture'] as String?);
-
-    active = (json[r'active'] == null) ? null : (json[r'active'] == 1);
+    icon = (json[r'icon'] == null) ? null : (json[r'icon'] as String?);
   }
 
   HobbyCategory.fromJson(Map<String, dynamic>? json) {
@@ -58,35 +55,38 @@ class HobbyCategory {
     if (description != null) {
       json[r'description'] = description;
     }
-    if (picture != null) {
-      json[r'picture'] = picture;
-    }
-    if (active != null) {
-      json[r'active'] = active;
+    if (icon != null) {
+      json[r'icon'] = icon;
     }
     return json;
   }
 
   static List<HobbyCategory> listFromJson(List<dynamic>? json) {
-    return json == null ? <HobbyCategory>[] : json.map((value) => HobbyCategory.fromJson(value)).toList();
+    return json == null
+        ? <HobbyCategory>[]
+        : json.map((value) => HobbyCategory.fromJson(value)).toList();
   }
 
   static Map<String, HobbyCategory> mapFromJson(Map<String, dynamic>? json) {
     final map = <String, HobbyCategory>{};
     if (json != null && json.isNotEmpty) {
-      json.forEach((String key, dynamic value) => map[key] = HobbyCategory.fromJson(value));
+      json.forEach((String key, dynamic value) =>
+          map[key] = HobbyCategory.fromJson(value));
     }
     return map;
   }
 
   @override
-  bool operator ==(Object? __other) {
+  bool operator ==(Object __other) {
     if (identical(this, __other)) {
       return true;
     }
 
     if (__other is HobbyCategory && runtimeType == __other.runtimeType) {
-      return id == __other.id && name == __other.name && description == __other.description && picture == __other.picture && active == __other.active;
+      return id == __other.id &&
+          name == __other.name &&
+          description == __other.description &&
+          icon == __other.icon;
     }
 
     return false;
@@ -108,12 +108,8 @@ class HobbyCategory {
       hashCode = hashCode * 31 + description.hashCode;
     }
 
-    if (picture != null) {
-      hashCode = hashCode * 31 + picture.hashCode;
-    }
-
-    if (active != null) {
-      hashCode = hashCode * 31 + active.hashCode;
+    if (icon != null) {
+      hashCode = hashCode * 31 + icon.hashCode;
     }
 
     return hashCode;
@@ -123,27 +119,23 @@ class HobbyCategory {
     String? id,
     String? name,
     String? description,
-    String? picture,
-    bool? active,
+    String? icon,
   }) {
     id ??= this.id;
     name ??= this.name;
     description ??= this.description;
-    picture ??= this.picture;
-    active ??= this.active;
+    icon ??= this.icon;
 
     final _copy_id = id;
     final _copy_name = name;
     final _copy_description = description;
-    final _copy_picture = picture;
-    final _copy_active = active;
+    final _copy_icon = icon;
 
     return HobbyCategory(
       id: _copy_id,
       name: _copy_name,
       description: _copy_description,
-      picture: _copy_picture,
-      active: _copy_active,
+      icon: _copy_icon,
     );
   }
 }

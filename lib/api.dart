@@ -105,15 +105,19 @@ part 'model/validation_response.dart';
 final debug = true;
 final staging = debug ? "staging." : "";
 
+// final basePath = "https://${staging}gokomm.com";
+final basePath = "http://172.19.0.2:8080";
+
 ApiClient kommApiClient = ApiClient(
-  basePath: "https://${staging}gokomm.com",
+
+  basePath: basePath,
 );
 
 ApiClient kommApiClient_v1 = debug
   ? ApiClient(
-      basePath: "https://${staging}gokomm.com/v1",
+      basePath: "${basePath}",
       apiClientDelegate: ConsoleLoggerApiDelegate()
     )
-  : ApiClient(basePath: "https://${staging}gokomm.com/v1");
+  : ApiClient(basePath: "${basePath}");
 
 final kommChatSocketUrl = "wss://${staging}chat.gokomm.com";

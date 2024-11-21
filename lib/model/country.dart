@@ -10,9 +10,6 @@ class Country {
 
   String? name;
 
-  /* Identifier of the currency */
-  String? currency;
-
   /* ISO language code */
   String? isoCode;
 
@@ -21,14 +18,13 @@ class Country {
   Country({
     this.id,
     this.name,
-    this.currency,
     this.isoCode,
     this.callPrefix,
   });
 
   @override
   String toString() {
-    return 'Country[id=$id, currency=$currency, isoCode=$isoCode, callPrefix=$callPrefix, ]';
+    return 'Country[id=$id, isoCode=$isoCode, callPrefix=$callPrefix, ]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -38,9 +34,7 @@ class Country {
 
     name = (json[r'name'] == null) ? null : (json[r'name'] as String?);
 
-    currency = (json[r'currency'] == null) ? null : (json[r'currency'] as String?);
-
-    isoCode = (json[r'iso_code'] == null) ? null : (json[r'iso_code'] as String?);
+    isoCode = (json[r'isoCode'] == null) ? null : (json[r'isoCode'] as String?);
 
     callPrefix = (json[r'call_prefix'] == null) ? null : (json[r'call_prefix'] as int?);
   }
@@ -57,11 +51,8 @@ class Country {
     if (name != null) {
       json[r'name'] = name;
     }
-    if (currency != null) {
-      json[r'currency'] = currency;
-    }
     if (isoCode != null) {
-      json[r'iso_code'] = isoCode;
+      json[r'isoCode'] = isoCode;
     }
     if (callPrefix != null) {
       json[r'call_prefix'] = callPrefix;
@@ -82,7 +73,7 @@ class Country {
   }
 
   @override
-  bool operator ==(Object? __other) {
+  bool operator ==(Object __other) {
     if (identical(this, __other)) {
       return true;
     }
@@ -90,7 +81,6 @@ class Country {
     if (__other is Country && runtimeType == __other.runtimeType) {
       return id == __other.id &&
         name == __other.name &&
-        currency == __other.currency &&
         isoCode == __other.isoCode &&
         callPrefix == __other.callPrefix;
     }
@@ -110,10 +100,6 @@ class Country {
       hashCode = hashCode * 31  + id.hashCode;
     }
 
-    if (currency != null) {
-      hashCode = hashCode * 31 + currency.hashCode;
-    }
-
     if (isoCode != null) {
       hashCode = hashCode * 31 + isoCode.hashCode;
     }
@@ -128,26 +114,22 @@ class Country {
   Country copyWith({
     String? id,
     String? name,
-    String? currency,
     String? isoCode,
     int? callPrefix,
   }) {
     id ??= this.id;
     name ??= this.name;
-    currency ??= this.currency;
     isoCode ??= this.isoCode;
     callPrefix ??= this.callPrefix;
 
     final _copy_id = id;
     final _copy_name = name;
-    final _copy_currency = currency;
     final _copy_isoCode = isoCode;
     final _copy_callPrefix = callPrefix;
 
     return Country(
       id: _copy_id,
       name: _copy_name,
-      currency: _copy_currency,
       isoCode: _copy_isoCode,
       callPrefix: _copy_callPrefix,
     );

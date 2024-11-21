@@ -10,20 +10,20 @@ class Language {
 
   String? name;
 
-  String? description;
+  String? code;
 
-  bool? active;
+  String? isoCode;
 
   Language({
     this.id,
     this.name,
-    this.description,
-    this.active,
+    this.code,
+    this.isoCode,
   });
 
   @override
   String toString() {
-    return 'Language[id=$id, name=$name, description=$description, active=$active, ]';
+    return 'Language[id=$id, name=$name, description=$code, active=$isoCode, ]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -33,9 +33,9 @@ class Language {
 
     name = (json[r'name'] == null) ? null : (json[r'name'] as String?);
 
-    description = (json[r'description'] == null) ? null : (json[r'description'] as String?);
+    code = (json[r'description'] == null) ? null : (json[r'description'] as String?);
 
-    active = (json[r'active'] == null) ? null : (json[r'active'] == 1);
+    isoCode = (json[r'active'] == null) ? null : (json[r'active'] as String?);
   }
 
   Language.fromJson(Map<String, dynamic>? json) {
@@ -50,11 +50,11 @@ class Language {
     if (name != null) {
       json[r'name'] = name;
     }
-    if (description != null) {
-      json[r'description'] = description;
+    if (code != null) {
+      json[r'description'] = code;
     }
-    if (active != null) {
-      json[r'active'] = active;
+    if (isoCode != null) {
+      json[r'active'] = isoCode;
     }
     return json;
   }
@@ -72,13 +72,13 @@ class Language {
   }
 
   @override
-  bool operator ==(Object? __other) {
+  bool operator ==(Object __other) {
     if (identical(this, __other)) {
       return true;
     }
 
     if (__other is Language && runtimeType == __other.runtimeType) {
-      return id == __other.id && name == __other.name && description == __other.description && active == __other.active;
+      return id == __other.id && name == __other.name && code == __other.code && isoCode == __other.isoCode;
     }
 
     return false;
@@ -96,12 +96,12 @@ class Language {
       hashCode = hashCode * 31 + name.hashCode;
     }
 
-    if (description != null) {
-      hashCode = hashCode * 31 + description.hashCode;
+    if (code != null) {
+      hashCode = hashCode * 31 + code.hashCode;
     }
 
-    if (active != null) {
-      hashCode = hashCode * 31 + active.hashCode;
+    if (isoCode != null) {
+      hashCode = hashCode * 31 + isoCode.hashCode;
     }
 
     return hashCode;
@@ -111,12 +111,12 @@ class Language {
     String? id,
     String? name,
     String? description,
-    bool? active,
+    String? active,
   }) {
     id ??= this.id;
     name ??= this.name;
-    description ??= this.description;
-    active ??= this.active;
+    description ??= this.code;
+    active ??= this.isoCode;
 
     final _copy_id = id;
     final _copy_name = name;
@@ -126,8 +126,8 @@ class Language {
     return Language(
       id: _copy_id,
       name: _copy_name,
-      description: _copy_description,
-      active: _copy_active,
+      code: _copy_description,
+      isoCode: _copy_active,
     );
   }
 }

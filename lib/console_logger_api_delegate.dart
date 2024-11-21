@@ -11,14 +11,21 @@ class ConsoleLoggerApiDelegate extends DioClientDelegate {
     if (!watchers.containsKey(path)) {
       watchers[path] = Stopwatch()..start();
     }
+
+    queryParams.forEach((element) {
+      print("Query param: ${element.name} = ${element.value}");
+    });
     
-    print("Iniciando llamada a $path (${DateTime.now()})");
+    print("Iniciando llamada a $basePath$path  (${DateTime.now()})");
 
     var response = super.invokeAPI(basePath, path, queryParams, body, options, passErrorsAsApiResponses: passErrorsAsApiResponses);
     response.then((_) {
       watchers[path]!.stop();
-      print("Llamada finalizada a $path (${DateTime.now()}), tiempo transcurrido: ${watchers[path]!.elapsedMilliseconds} ms");
+      print("Llamada finalizada a $basePath $path (${DateTime.now()}), tiempo transcurrido: ${watchers[path]!.elapsedMilliseconds} ms");
 
+    }).catchError((error) {
+      watchers[path]!.stop();
+      print(error);
     });
 
     return response;
