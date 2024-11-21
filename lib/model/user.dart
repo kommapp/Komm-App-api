@@ -5,30 +5,30 @@ class User {
   String? id;
   String? email;
   double? height;
-  String? dateBirth;
-  String? gender;
-  String? education;
-  String? complexion;
-  String? country;
-  int? active;
+  String? birthdate;
+  String? genderId;
+  String? educationId;
+  String? complexionId;
+  String? countryId;
+  bool? active;
   bool? verified;
 
   User({
     this.id,
     this.email,
     this.height,
-    this.dateBirth,
-    this.gender,
-    this.education,
-    this.complexion,
-    this.country,
+    this.birthdate,
+    this.genderId,
+    this.educationId,
+    this.complexionId,
+    this.countryId,
     this.active,
     this.verified,
   });
 
   @override
   String toString() {
-    return 'User[id=$id, email=$email, height=$height, dateBirth=$dateBirth, gender=$gender, education=$education, complexion=$complexion, country=$country, active=$active], verified=$verified]';
+    return 'User[id=$id, email=$email, height=$height, birthdate=$birthdate, genderId=$genderId, educationId=$educationId, complexionId=$complexionId, countryId=$countryId, active=$active], verified=$verified]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -37,12 +37,12 @@ class User {
     id = (json[r'id'] == null) ? null : (json[r'id'] as String?);
     email = (json[r'email'] == null) ? null : (json[r'email'] as String?);
     height = (json[r'height'] == null || json[r'height'] == 0) ? null : (json[r'height'] as num?)?.toDouble();
-    dateBirth = (json[r'datebirth'] == null) ? null : (json[r'datebirth'] as String?);
-    gender = (json[r'gender'] == null) ? null : (json[r'gender'] as String?);
-    education = (json[r'education'] == null) ? null : (json[r'education'] as String?);
-    complexion = (json[r'complexion'] == null) ? null : (json[r'complexion'] as String?);
-    country = (json[r'country'] == null) ? null : (json[r'country'] as String?);
-    active = (json[r'active'] == null) ? null : (json[r'active'] as int?);
+    birthdate = (json[r'birthdate'] == null) ? null : (json[r'birthdate'] as String?);
+    genderId = (json[r'genderId'] == null) ? null : (json[r'genderId'] as String?);
+    educationId = (json[r'educationId'] == null) ? null : (json[r'educationId'] as String?);
+    complexionId = (json[r'complexionId'] == null) ? null : (json[r'complexionId'] as String?);
+    countryId = (json[r'countryId'] == null) ? null : (json[r'countryId'] as String?);
+    active = (json[r'active'] == null) ? null : (json[r'active'] as bool?);
     verified = (json[r'verified'] == null) ? null : (json[r'verified'] as bool?);
   }
 
@@ -59,23 +59,23 @@ class User {
     if (email != null) {
       json[r'email'] = email;
     }
-    if (dateBirth != null) {
-      json[r'datebirth'] = dateBirth;
+    if (birthdate != null) {
+      json[r'birthdate'] = birthdate;
     }
     if (height != null) {
       json[r'height'] = height;
     }
-    if (gender != null) {
-      json[r'gender'] = gender;
+    if (genderId != null) {
+      json[r'genderId'] = genderId;
     }
-    if (education != null) {
-      json[r'education'] = education;
+    if (educationId != null) {
+      json[r'educationId'] = educationId;
     }
-    if (complexion != null) {
-      json[r'complexion'] = complexion;
+    if (complexionId != null) {
+      json[r'complexionId'] = complexionId;
     }
-    if (country != null) {
-      json[r'country'] = country;
+    if (countryId != null) {
+      json[r'countryId'] = countryId;
     }
     if (active != null) {
       json[r'active'] = active;
@@ -101,7 +101,7 @@ class User {
   }
 
   @override
-  bool operator ==(Object? __other) {
+  bool operator ==(Object __other) {
     if (identical(this, __other)) {
       return true;
     }
@@ -109,12 +109,12 @@ class User {
     if (__other is User && runtimeType == __other.runtimeType) {
       return id == __other.id &&
           email == __other.email &&
-          dateBirth == __other.dateBirth &&
+          birthdate == __other.birthdate &&
           height == __other.height &&
-          gender == __other.gender &&
-          education == __other.education &&
-          complexion == __other.complexion &&
-          country == __other.country &&
+          genderId == __other.genderId &&
+          educationId == __other.educationId &&
+          complexionId == __other.complexionId &&
+          countryId == __other.countryId &&
           active == __other.active &&
           verified == __other.verified;
     }
@@ -132,17 +132,17 @@ class User {
     if (height != null) {
       hashCode = hashCode * 31 + height.hashCode;
     }
-    if (gender != null) {
-      hashCode = hashCode * 31 + gender.hashCode;
+    if (genderId != null) {
+      hashCode = hashCode * 31 + genderId.hashCode;
     }
-    if (education != null) {
-      hashCode = hashCode * 31 + education.hashCode;
+    if (educationId != null) {
+      hashCode = hashCode * 31 + educationId.hashCode;
     }
-    if (complexion != null) {
-      hashCode = hashCode * 31 + complexion.hashCode;
+    if (complexionId != null) {
+      hashCode = hashCode * 31 + complexionId.hashCode;
     }
-    if (country != null) {
-      hashCode = hashCode * 31 + country.hashCode;
+    if (countryId != null) {
+      hashCode = hashCode * 31 + countryId.hashCode;
     }
     if (active != null) {
       hashCode = hashCode * 31 + active.hashCode;
@@ -158,33 +158,33 @@ class User {
     String? id,
     String? email,
     double? height,
-    String? dateBirth,
-    String? gender,
-    String? education,
-    String? complexion,
-    String? country,
-    int? active,
+    String? birthdate,
+    String? genderId,
+    String? educationId,
+    String? complexionId,
+    String? countryId,
+    bool? active,
     bool? verified,
   }) {
     id ??= this.id;
     email ??= this.email;
     height ??= this.height;
-    dateBirth ??= this.dateBirth;
-    gender ??= this.gender;
-    education ??= this.education;
-    complexion ??= this.complexion;
-    country ??= this.country;
+    birthdate ??= this.birthdate;
+    genderId ??= this.genderId;
+    educationId ??= this.educationId;
+    complexionId ??= this.complexionId;
+    countryId ??= this.countryId;
     active ??= this.active;
     verified ??= this.verified;
 
     final _copy_id = id;
     final _copy_email = email;
     final _copy_height = height;
-    final _copy_dateBirth = dateBirth;
-    final _copy_gender = gender;
-    final _copy_education = education;
-    final _copy_complexion = complexion;
-    final _copy_country = country;
+    final _copy_birthdate = birthdate;
+    final _copy_genderId = genderId;
+    final _copy_educationId = educationId;
+    final _copy_complexionId = complexionId;
+    final _copy_countryId = countryId;
     final _copy_active = active;
     final _copy_verified = verified;
 
@@ -192,11 +192,11 @@ class User {
       id: _copy_id,
       email: _copy_email,
       height: _copy_height,
-      dateBirth: _copy_dateBirth,
-      gender: _copy_gender,
-      education: _copy_education,
-      complexion: _copy_complexion,
-      country: _copy_country,
+      birthdate: _copy_birthdate,
+      genderId: _copy_genderId,
+      educationId: _copy_educationId,
+      complexionId: _copy_complexionId,
+      countryId: _copy_countryId,
       active: _copy_active,
       verified: _copy_verified,
     );

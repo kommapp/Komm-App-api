@@ -211,6 +211,7 @@ class LocalApiClient {
     if (targetType == 'String') return json;
 
     final decodedJson = jsonDecode(json);
+    print('decodedJson: $decodedJson');
     return deserialize(decodedJson, targetType);
   }
 

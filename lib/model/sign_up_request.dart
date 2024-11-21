@@ -8,7 +8,7 @@ class SignupRequest {
   String? id;
   String? email;
   String? password;
-  String? dateBirth;
+  String? birthdate;
   String? gender;
   num?    height;
   String? complexion;
@@ -19,7 +19,7 @@ class SignupRequest {
     this.id,
     this.email,
     this.password,
-    this.dateBirth,
+    this.birthdate,
     this.gender,
     this.height,
     this.complexion,
@@ -29,7 +29,7 @@ class SignupRequest {
 
   @override
   String toString() {
-    return 'SignupRequest[id=$id, email=$email, password=$password, datebirth=$dateBirth, gender=$gender, height=$height, complexion=$complexion, education=$education, country=$country, ]';
+    return 'SignupRequest[id=$id, email=$email, password=$password, birthdate=$birthdate, gender=$gender, height=$height, complexion=$complexion, education=$education, country=$country, ]';
   }
 
   fromJson(Map<String, dynamic>? json) {
@@ -38,7 +38,7 @@ class SignupRequest {
     id         = (json[r'id']         == null) ? null: (json[r'id'] as String?);
     email      = (json[r'email']      == null) ? null: (json[r'email'] as String?);
     password   = (json[r'password']   == null) ? null: (json[r'password'] as String?);
-    dateBirth  = (json[r'datebirth']  == null) ? null: (json[r'datebirth'] as String?);
+    birthdate  = (json[r'birthdate']  == null) ? null: (json[r'birthdate'] as String?);
     gender     = (json[r'gender']     == null) ? null: (json[r'gender'] as String?);
     height     = (json[r'height']     == null) ? null: (json[r'height'] as num?);
     complexion = (json[r'complexion'] == null) ? null: (json[r'complexion'] as String?);
@@ -62,8 +62,8 @@ class SignupRequest {
     if (password != null) {
       json[r'password'] = password;
     }
-    if (dateBirth != null) {
-      json[r'datebirth'] = dateBirth;
+    if (birthdate != null) {
+      json[r'birthdate'] = birthdate;
     }
     if (gender != null) {
       json[r'gender'] = gender;
@@ -105,7 +105,7 @@ class SignupRequest {
       return id == __other.id &&
           email == __other.email &&
           password == __other.password &&
-          dateBirth == __other.dateBirth &&
+          birthdate == __other.birthdate &&
           gender == __other.gender &&
           height == __other.height &&
           complexion == __other.complexion &&
@@ -132,8 +132,8 @@ class SignupRequest {
       hashCode = hashCode * 31 + password.hashCode;
     }
 
-    if (dateBirth != null) {
-      hashCode = hashCode * 31 + dateBirth.hashCode;
+    if (birthdate != null) {
+      hashCode = hashCode * 31 + birthdate.hashCode;
     }
 
     if (gender != null) {
@@ -163,7 +163,7 @@ class SignupRequest {
     String? id,
     String? email,
     String? password,
-    String? datebirth,
+    String? birthdate,
     String? gender,
     num? height,
     String? complexion,
@@ -173,7 +173,7 @@ class SignupRequest {
     id ??= this.id;
     email ??= this.email;
     password ??= this.password;
-    datebirth ??= this.dateBirth;
+    birthdate ??= this.birthdate;
     gender ??= this.gender;
     height ??= this.height;
     complexion ??= this.complexion;
@@ -183,7 +183,7 @@ class SignupRequest {
     final _copy_id = id;
     final _copy_email = email;
     final _copy_password = password;
-    final _copy_datebirth = datebirth;
+    final _copy_birthdate = birthdate;
     final _copy_gender = gender;
     final _copy_height = height;
     final _copy_complexion = complexion;
@@ -194,7 +194,7 @@ class SignupRequest {
       id        : _copy_id,
       email     : _copy_email,
       password  : _copy_password,
-      dateBirth : _copy_datebirth,
+      birthdate : _copy_birthdate,
       gender    : _copy_gender,
       height    : _copy_height,
       complexion: _copy_complexion,

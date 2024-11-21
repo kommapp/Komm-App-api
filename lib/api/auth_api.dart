@@ -102,7 +102,7 @@ class AuthApiDelegate {
       String? username,
       String? password}) async {
     // create path and map variables
-    final __path = '/oauth/token';
+    final __path = '/login';
 
     // query params
     final queryParams = <QueryParam>[];
